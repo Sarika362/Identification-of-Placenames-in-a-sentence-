@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/styles.css">
+    <title>Identification of Place Names</title>
+    <style>
+        .error-message {
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1 class="h">Identification of Place Names</h1>
+    <br><br>
+
+    <form method="post" class="f" onsubmit="return validateForm()">
+        <label for="message" class="h"><b>Type your message here:</b></label><br><br>
+        <textarea name="message" class="c" id="message" rows="6" cols="150" required>{{ text }}</textarea><br>
+        <input type="hidden" name="form_submitted" id="form_submitted" value="0">
+        <input type="submit" value="Submit"><br>
+    </form>
+
+    <div id="result">
+        {% if result %}
+            <h2>Search Results:</h2>
+            <ul class="u">
+                {% for item in result %}
+                    <li>The word <b>{{ item.word }}</b> is found, its canonical name is <b>{{ item.canonical_name }}</b>, and it is in the <b>{{ item.table }}</b> table.</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            {% if form_submitted %}
+                <p class="error-message">No results found. Please re-enter the text and submit.</p>
+            {% endif %}
+        {% endif %}
+    </div>
+
+    <script>
+        var formSubmitted = false;
+
+        function validateForm() {
+            var messageInput = document.getElementById('message').value;
+            var formSubmittedField = document.getElementById('form_submitted');
+            var resultDiv = document.getElementById('result');
+
+            if (messageInput.trim() === '') {
+                // Display an error message
+                resultDiv.innerHTML = '<p class="error-message">Please enter a message before submitting.</p>';
+                return false; // Prevent form submission
+            }
+
+            // Clear previous error messages
+            resultDiv.innerHTML = '';
+
+            // Set the form_submitted hidden field value to true
+            formSubmittedField.value = '1';
+
+            return true; // Allow form submission
+        }
+    </script>
+
+</body>
+</html>
